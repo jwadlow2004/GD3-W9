@@ -2,8 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Camera_CameraFollow : MonoBehaviour
-{
+
+
+namespace GameDevWithMarco.CameraStuff
+{ 
+ public class Camera_CameraFollow : MonoBehaviour
+ {
     /// <summary>
     /// Code for the smooth follow from: https://www.youtube.com/watch?v=_QnPY6hw8pA
     /// </summary>
@@ -41,4 +45,5 @@ public class Camera_CameraFollow : MonoBehaviour
         //Actually moves the camera to the smoothedPosition Vector3 location
         transform.position = smoothedPosition;
     }
+ }
 }
