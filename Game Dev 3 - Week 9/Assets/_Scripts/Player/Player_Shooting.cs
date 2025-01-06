@@ -15,7 +15,7 @@ namespace GameDevWithMarco.Player
         [SerializeField] GameEvent bulletShot;
         [SerializeField] GameObject muzzleFlash;
         [SerializeField] ParticleSystem sparks;
-        [SerializeField] GameObject bulletPrefab;
+        
 
         private void Start()
         {
@@ -34,7 +34,7 @@ namespace GameDevWithMarco.Player
         void Fire()
         {
             //Spawns the bullet
-            GameObject spawnedBullet = Instantiate(bulletPrefab);
+            GameObject spawnedBullet = ObjectPoolingPattern.Instance.GetPoolItem(ObjectPoolingPattern.TypeOfPool.BulletPool);
 
             //Make the bullet be in the right position
             if (spawnedBullet != null)
@@ -58,12 +58,14 @@ namespace GameDevWithMarco.Player
             CameraRippleEffect.Instance.Ripple(tipOfTheBarrel.transform.position);
 
             //Muzzle flash code
-            var muzzleFlashObject = Instantiate(muzzleFlash, tipOfTheBarrel.transform.position, Quaternion.identity);
+            var muzzleFlashObject = ObjectPoolingPattern.Instance.GetPoolItem(ObjectPoolingPattern.TypeOfPool.MuzzleFlash);
             float randomValue = Random.Range(0.8f, 1.25f);
-            muzzleFlash.transform.localScale = new Vector3(randomValue, randomValue, randomValue);
-            //Destroys the muzzleflash and then the bullet
-            Destroy(muzzleFlashObject, 1f);
-            Destroy(spawnedBullet, 1f);
+            muzzleFlashObject.transform.localScale = new Vector3(randomValue, randomValue, randomValue);
+            var muzzleFlashScript = muzzleFlashObject.GetComponent<PlayerMuzzleFlash>();
+            StartCoroutine(muzzleFlashScript.ReturnToThePool());
+            muzzleFlashObject.transform.position = tipOfTheBarrel.position;
+           
+            
 
             //Plays the sparks particles
             sparks.Play();
